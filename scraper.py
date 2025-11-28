@@ -59,8 +59,7 @@ def scrape_company_details(detail_url):
             break
     
     if not website_url:
-        # Fallback: look for any link that looks like a homepage if specific button not found
-        # Or maybe it's just in the content
+
         pass
 
     print(f"  Found: {company_name} - {website_url}")
@@ -70,7 +69,6 @@ def scrape_company_details(detail_url):
     
     if website_url:
         try:
-            # Visit the company website
             print(f"    Visiting external site: {website_url}")
             site_soup = get_soup(website_url)
             
@@ -81,7 +79,6 @@ def scrape_company_details(detail_url):
                 emails = extract_emails(text_content)
                 phones = extract_phones(text_content)
                 
-                # If not found, try contact page
                 if not emails or not phones:
                     contact_links = []
                     for link in site_soup.find_all('a', href=True):
@@ -133,8 +130,6 @@ def main():
     
     # Check if file exists to append or create new
     if os.path.exists(output_file):
-        # Load existing to avoid duplicates if re-running? 
-        # For now, let's just overwrite or append. Let's overwrite for a fresh start or user can rename.
         pass
 
     print(f"Starting scrape for {args.pages} pages...")
@@ -150,8 +145,7 @@ def main():
         if not soup:
             continue
             
-        # Find company links
-        # Based on inspection: a.post-thumbnail-rollover
+
         links = soup.select("a.post-thumbnail-rollover")
         
         for link in links:
@@ -165,7 +159,6 @@ def main():
             if data:
                 all_companies.append(data)
                 
-                # Save incrementally
                 df = pd.DataFrame(all_companies)
                 df.to_csv(output_file, index=False, encoding="utf-8-sig")
                 
